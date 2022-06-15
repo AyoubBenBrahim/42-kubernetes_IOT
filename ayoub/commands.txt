@@ -1,0 +1,11 @@
+vboxmanage list vms
+vagrant box list
+kubectl cluster-info
+kubectl get nodes -o wide
+vagrant box list
+
+
+Showing a post-up message
+
+config.vm.post_up_message = "The App is up and running at http://192\ .168.33.101."
+When you run vagrant up and the whole process is finished, you’ll see now this message

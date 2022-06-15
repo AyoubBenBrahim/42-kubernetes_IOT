@@ -1,0 +1,2 @@
+echo "alias k=\"k3s kubectl\"" >> ~/.bashrc
+source ~/.bashrc

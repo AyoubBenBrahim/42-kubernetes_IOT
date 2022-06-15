@@ -1,0 +1,36 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "centos/7"
+
+    config.vm.define "ayoubS" do |server|
+        server.vm.box_check_update  = false
+        server.vm.hostname = "ayoubS"
+        server.vm.network "private_network", ip: "192.168.42.110"
+        #server.vm.provider "virtualbox" do |v|
+        server.vm.provider :virtualbox do |v|
+            v.name = "ayoubS"
+            v.memory = 1024
+            v.cpus = 1
+        end
+        # k3s installation
+        # https://rancher.com/docs/k3s/latest/en/quick-start/
+        server.vm.provision "shell", path: "srever_config.sh"
+       
+    end
+
+    config.vm.define "ayoubSW" do |worker|
+        worker.vm.hostname = "ayoubSW"
+        worker.vm.box_check_update  = false
+        worker.vm.network "private_network", ip: "192.168.42.111"
+        worker.vm.provider "virtualbox" do |v|
+            v.name = "ayoubSW"
+            v.memory = 1024
+            v.cpus = 1
+        end
+         # k3s installation
+         worker.vm.provision "shell", path: "worker_config.sh"
+    end
+    
+end
