@@ -1,0 +1,4 @@
+vboxmanage list vms
+vagrant box list
+kubectl cluster-info
+kubectl get nodes -o wide
