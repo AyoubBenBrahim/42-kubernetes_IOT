@@ -3,6 +3,8 @@ vagrant box list
 kubectl cluster-info
 kubectl get nodes -o wide
 
+echo "alias k=\"k3s kubectl\"" >> ~/.bashrc
+source ~/.bashrc
 
 Showing a post-up message
 
