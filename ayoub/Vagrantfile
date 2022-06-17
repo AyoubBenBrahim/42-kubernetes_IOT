@@ -10,7 +10,7 @@ $server_config = <<-SCRIPT
 # echo $(sudo cat /var/lib/rancher/k3s/server/node-token) > ~/vagrant/k3s_token
 
 echo "aaaaaaaaaa" > k3s_token
-echo "here is ur token" > /vagrant/tokenz
+echo "token passed from server to worker" > /vagrant/tokenz
 
 SCRIPT
 
@@ -25,11 +25,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # config.vm.box = "centos/7"
     config.vm.box = "generic/centos8"
     # config.vm.synced_folder ".", "/vagrant", type: "nfs", rsync__exclude: ".git/" 
-    # config.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true
+    config.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true
     # , disabled: true
 
     config.vm.define "ayoubS" do |server|
-        server.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true
+        # server.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true
 
         server.vm.hostname = "ayoubS"
         server.vm.network "private_network", ip: "192.168.42.110"
