@@ -6,16 +6,15 @@ $server_config = <<-SCRIPT
 # vagrant plugin install vagrant-scp
 
 # curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s -
-# curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s - --write-kubeconfig-mode 644
-# echo $(sudo cat /var/lib/rancher/k3s/server/node-token) > ~/vagrant/k3s_token
+ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s - --write-kubeconfig-mode 644
+ echo $(sudo cat /var/lib/rancher/k3s/server/node-token) > /vagrant/k3s_token
 
-echo "aaaaaaaaaa" > k3s_token
-echo "token passed from server to worker" > /vagrant/tokenz
 
 SCRIPT
 
 $worker_config = <<-SCRIPT
-# echo "+++++++++++++++++ HELLO WORLD *******************" > test.txt
+
+curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 INSTALL_K3S_EXEC="--flannel-iface eth1" --token-file /vagrant/k3s_token --node-ip 192.168.42.111 sh -
 
 SCRIPT
 
@@ -29,8 +28,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # , disabled: true
 
     config.vm.define "ayoubS" do |server|
-        # server.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true
-
         server.vm.hostname = "ayoubS"
         server.vm.network "private_network", ip: "192.168.42.110"
         server.vm.provider :virtualbox do |v|
