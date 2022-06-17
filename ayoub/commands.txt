@@ -1,4 +1,6 @@
 vboxmanage list vms
+vboxmanage list runningvms // running ones
+
 vagrant box list
 kubectl cluster-info
 kubectl get nodes -o wide

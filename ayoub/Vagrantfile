@@ -3,24 +3,31 @@
 
 $server_config = <<-SCRIPT
 
+systemctl stop firewalld
+systemctl disable firewalld
+
 # # curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s -
 #  curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s - --write-kubeconfig-mode 644
-#  echo $(sudo cat /var/lib/rancher/k3s/server/node-token) > /vagrant/k3s_token
 
 sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
 sudo echo "192.168.42.111  ayoubSW" >> /etc/hosts
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip=192.168.42.110 --flannel-iface=eth1 --write-kubeconfig-mode=644" sh -
+echo $(sudo cat /var/lib/rancher/k3s/server/node-token) > /vagrant/k3s_token
 
 SCRIPT
 
 $worker_config = <<-SCRIPT
+
+# systemctl stop firewalld
+# systemctl disable firewalld
 
 #curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 INSTALL_K3S_EXEC="--flannel-iface eth1" --token-file /vagrant/k3s_token --node-ip 192.168.42.111 sh -
 #  curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 INSTALL_K3S_EXEC="--node-ip=192.168.42.111 --flannel-iface eth1" K3S_TOKEN_FILE="/vagrant/k3s_token"  sh -
 
 sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
 sudo echo "192.168.42.111  ayoubSW" >> /etc/hosts
-curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 K3S_TOKEN_FILE="/vagrant/k3s_token" sh -
+# curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 K3S_TOKEN_FILE="/vagrant/k3s_token" sh -
+curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" K3S_URL=https://192.168.42.110:6443 K3S_TOKEN=$(cat /vagrant/k3s_token) INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s -
 
 SCRIPT
 
@@ -29,9 +36,9 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # config.vm.box = "centos/7"
     config.vm.box = "generic/centos8"
-    # config.vm.synced_folder ".", "/vagrant", type: "nfs", rsync__exclude: ".git/" 
-    config.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true
+    # config.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true
     # , disabled: true
+    config.vm.synced_folder ".", "/vagrant"
 
     config.vm.define "ayoubS" do |server|
         server.vm.hostname = "ayoubS"
@@ -43,11 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
         server.vm.provision "shell", inline: $server_config
 
-        # server.trigger.after :up do |tr|
-        #     tr.run = {inline: "vagrant scp ayoubS:/vagrant/tokenz ."}
-        # end
-
-        server.vm.post_up_message = "configuration finished , the server is runnung at 192.168.42.110 "
+        server.vm.post_up_message = "configuration finished , the server is runnung at 192.168.42.110"
        
     end
 
@@ -59,10 +62,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             v.memory = 1024
             v.cpus = 1
         end
-        #  worker.vm.provision "shell", path: "worker_config.sh"
         worker.vm.provision "shell", inline: $worker_config
 
-        worker.vm.post_up_message = "configuration finished , the worker is runnung at 192.168.42.111 "
+        worker.vm.post_up_message = "configuration finished , the worker is runnung at 192.168.42.111"
 
     end
     
