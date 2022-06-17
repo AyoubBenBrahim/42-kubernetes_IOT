@@ -3,19 +3,25 @@
 
 $server_config = <<-SCRIPT
 
-# vagrant plugin install vagrant-scp
+# # curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s -
+#  curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s - --write-kubeconfig-mode 644
+#  echo $(sudo cat /var/lib/rancher/k3s/server/node-token) > /vagrant/k3s_token
 
-# curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s -
- curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--flannel-iface eth1" sh -s - --write-kubeconfig-mode 644
- echo $(sudo cat /var/lib/rancher/k3s/server/node-token) > /vagrant/k3s_token
-
+sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
+sudo echo "192.168.42.111  ayoubSW" >> /etc/hosts
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip=192.168.42.110 --flannel-iface=eth1 --write-kubeconfig-mode=644" sh -
 
 SCRIPT
 
 $worker_config = <<-SCRIPT
 
 #curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 INSTALL_K3S_EXEC="--flannel-iface eth1" --token-file /vagrant/k3s_token --node-ip 192.168.42.111 sh -
- curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 INSTALL_K3S_EXEC="--node-ip=192.168.42.111 --flannel-iface eth1" K3S_TOKEN_FILE="/vagrant/k3s_token"  sh -
+#  curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 INSTALL_K3S_EXEC="--node-ip=192.168.42.111 --flannel-iface eth1" K3S_TOKEN_FILE="/vagrant/k3s_token"  sh -
+
+sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
+sudo echo "192.168.42.111  ayoubSW" >> /etc/hosts
+curl -sfL https://get.k3s.io | K3S_URL=https://192.168.42.110:6443 K3S_TOKEN_FILE="/vagrant/k3s_token" sh -
+
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
