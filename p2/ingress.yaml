@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app1
+            port:
+              number: 3200
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: ingress-wildcard-host
+# spec:
+#   rules:
+#   - host: "foo.bar.com"
+#     http:
+#       paths:
+#       - pathType: Prefix
+#         path: "/bar"
+#         backend:
+#           service:
+#             name: service1
+#             port:
+#               number: 80

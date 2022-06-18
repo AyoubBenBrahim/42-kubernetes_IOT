@@ -1,0 +1,39 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$server_config = <<-SCRIPT
+
+# systemctl stop firewalld
+# systemctl disable firewalld
+
+sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip=192.168.42.110 --flannel-iface=eth1 --write-kubeconfig-mode=644" sh -
+
+# >/dev/null 2>&1
+
+#   kubectl apply -f /vagrant/deployment/app1.yaml
+#   kubectl apply -f /vagrant/service/svc.yaml 
+
+#   kubectl apply -f /vagrant/ingress.yaml
+
+SCRIPT
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    config.vm.box = "generic/centos8"
+    config.vm.synced_folder ".", "/vagrant"
+
+    config.vm.define "ayoubS" do |server|
+        server.vm.hostname = "ayoubS"
+        server.vm.network "private_network", ip: "192.168.42.110"
+        server.vm.provider :virtualbox do |v|
+            v.name = "ayoubS"
+            v.memory = 1024
+            v.cpus = 1
+        end
+        server.vm.provision "shell", inline: $server_config       
+    end
+    
+end

@@ -16,9 +16,6 @@ SCRIPT
 
 $worker_config = <<-SCRIPT
 
-# systemctl stop firewalld
-# systemctl disable firewalld
-
 sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
 sudo echo "192.168.42.111  ayoubSW" >> /etc/hosts
 
@@ -29,10 +26,7 @@ SCRIPT
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    # config.vm.box = "centos/7"
     config.vm.box = "generic/centos8"
-    # config.vm.synced_folder ".", "/vagrant", SharedFoldersEnableSymlinksCreate: true
-    # , disabled: true
     config.vm.synced_folder ".", "/vagrant"
 
     config.vm.define "ayoubS" do |server|
@@ -45,7 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
         server.vm.provision "shell", inline: $server_config
 
-        server.vm.post_up_message = "configuration finished , the server is runnung at 192.168.42.110"
+        # server.vm.post_up_message = "configuration finished , the server is runnung at 192.168.42.110"
        
     end
 
@@ -58,9 +52,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             v.cpus = 1
         end
         worker.vm.provision "shell", inline: $worker_config
-
-        worker.vm.post_up_message = "configuration finished , the worker is runnung at 192.168.42.111"
-
     end
     
 end

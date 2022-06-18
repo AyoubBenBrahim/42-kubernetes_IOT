@@ -1,0 +1,38 @@
+vboxmanage list vms
+vboxmanage list runningvms // running ones
+
+vagrant box list
+kubectl cluster-info
+kubectl get nodes -o wide
+
+echo "alias k=\"k3s kubectl\"" >> ~/.bashrc
+source ~/.bashrc
+
+config.vm.post_up_message = "The App is up and running at http://192\ .168.33.101."
+When you run vagrant up and the whole process is finished, you’ll see now this message
+
+ kubectl get deploy hello-deploy
+ kubectl describe deploy hello-deploy
+
+# Deployments automatically create associated ReplicaSets
+kubectl get rs
+kubectl get rs hello-deploy-65cbc9474c
+
+
+kubectl apply -f deploy.yml
+# kubectl apply posts the YAML file to the Kubernetes API server and includes all necessary authentication tokens.
+
+
+kubectl get all
+kubectl get pod
+kubectl get pods -o wide
+
+kubectl get nodes -o wide
+
+kubectl get ing
+kubectl describ ingress.networking.k8s.io/ingress-service
+
+kubectl get svc
+
+
+
