@@ -4,7 +4,7 @@
 $server_config = <<-SCRIPT
 
 systemctl stop firewalld
-# systemctl disable firewalld
+systemctl disable firewalld
 
 sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
 
