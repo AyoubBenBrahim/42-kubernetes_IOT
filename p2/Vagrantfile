@@ -3,19 +3,20 @@
 
 $server_config = <<-SCRIPT
 
-systemctl stop firewalld
-systemctl disable firewalld
+# they should be run as sudo
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
 
-sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
+# sudo echo "192.168.42.110  ayoubS" >> /etc/hosts
 
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip=192.168.42.110 --flannel-iface=eth1 --write-kubeconfig-mode=644" sh -
 
-# >/dev/null 2>&1
+# shouldn't be run with sudo
 
-#   kubectl apply -f /vagrant/deployment/my_apps.yaml
-#   kubectl apply -f /vagrant/service/services.yaml 
+  kubectl apply -f /vagrant/deployment/my_apps.yaml
+  kubectl apply -f /vagrant/service/services.yaml 
 
-#   kubectl apply -f /vagrant/ingress.yaml
+  kubectl apply -f /vagrant/ingress.yaml
 
 SCRIPT
 
@@ -33,7 +34,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             v.memory = 1024
             v.cpus = 1
         end
-        server.vm.provision "shell", inline: $server_config       
+
+        # server.trigger.before :up do |trigger|
+        #     trigger.run = {inline: $disable_firewalld}
+        # end
+
+        # privileged (boolean) - Specifies whether to execute the shell script as
+        #  a privileged user or not (sudo). By default this is "true".
+        server.vm.provision "shell", inline: $server_config  , privileged: false
     end
     
 end
