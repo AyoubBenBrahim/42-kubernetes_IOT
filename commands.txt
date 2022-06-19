@@ -18,7 +18,6 @@ When you run vagrant up and the whole process is finished, you’ll see now this
 kubectl get rs
 kubectl get rs hello-deploy-65cbc9474c
 
-
 kubectl apply -f deploy.yml
 # kubectl apply posts the YAML file to the Kubernetes API server and includes all necessary authentication tokens.
 
@@ -30,9 +29,13 @@ kubectl get pods -o wide
 kubectl get nodes -o wide
 
 kubectl get ing
-kubectl describ ingress.networking.k8s.io/ingress-service
+kubectl describe ing ingress-service
+kubectl delete ingress its_name
+kubectl delete ing .....
 
 kubectl get svc
 
 
+curl --header "Host: app3.com" 192.168.42.110
 
+curl --header "Host: app2.com" --silent 192.168.42.110 | grep "from"
