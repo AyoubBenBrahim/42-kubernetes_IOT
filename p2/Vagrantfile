@@ -12,8 +12,8 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip=192.168.42.110 --flan
 
 # >/dev/null 2>&1
 
-#   kubectl apply -f /vagrant/deployment/app1.yaml
-#   kubectl apply -f /vagrant/service/svc.yaml 
+#   kubectl apply -f /vagrant/deployment/my_apps.yaml
+#   kubectl apply -f /vagrant/service/services.yaml 
 
 #   kubectl apply -f /vagrant/ingress.yaml
 
