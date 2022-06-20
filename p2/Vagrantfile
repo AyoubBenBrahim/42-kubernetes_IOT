@@ -13,10 +13,74 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip=192.168.42.110 --flan
 
 # shouldn't be run with sudo
 
-  kubectl apply -f /vagrant/deployment/my_apps.yaml
-  kubectl apply -f /vagrant/service/services.yaml 
+    kubectl apply -f /vagrant/namespace.yaml
 
-  kubectl apply -f /vagrant/ingress.yaml
+    kubectl apply -f /vagrant/deployment/my_apps.yaml
+    kubectl apply -f /vagrant/service/services.yaml 
+
+    kubectl apply -f /vagrant/ingress.yaml
+
+#  sh  wait_for_pods_to_run
+
+sleep 2
+
+while (true)
+    do
+        output=$(kubectl get pods --namespace inception-of-things | awk '{ print $3 }' | awk 'NR!=1' | grep Running | wc -l)
+         
+     if [ $output == "1" ]; then
+              echo -e "\033[0;32m Pod1 is Running .....\033[0m"
+     
+     elif [ $output == "2" ]; then
+            echo -e "\033[0;32m Pod2 is Running .....\033[0m"
+     
+     elif [ $output == "3" ]; then
+            echo -e "\033[0;32m Pod3 is Running .....\033[0m"
+     
+     elif [ $output == "4" ]; then
+            echo -e "\033[0;32m Pod4 is Running .....\033[0m"
+     
+     elif [ $output == "5" ]; then
+            echo -e "\033[0;32m All Pods are Ready and  Running .....\033[0m"
+        sleep 2
+        exit 0
+    
+     else 
+        echo -e "\033[0;31m Waiting for Pods to get Ready .....\033[0m"
+        sleep 2
+
+     fi
+    
+    done
+
+    sleep 2
+SCRIPT
+
+$wait_for_pods_to_run = <<-SCRIPT
+
+while (true)
+    do
+        output=$(kubectl get pods --namespace default | awk '{ print $3 }' | awk 'NR!=1' | grep Running | wc -l)
+         
+     if [ $output == "1" ]; then
+              echo -e "\033[0;32m Pod1 is Running .....\033[0m"
+     
+     elif [ $output == "2" ]; then
+            echo -e "\033[0;32m Pod2 is Running .....\033[0m"
+     
+     elif [ $output == "3" ]; then
+            echo -e "\033[0;32m Pod3 is Running .....\033[0m"
+     
+     elif [ $output == "4" ]; then
+            echo -e "\033[0;32m Pod4 is Running .....\033[0m"
+     
+     elif [ $output == "5" ]; then
+            echo -e "\033[0;32m All Pods are Ready and  Running .....\033[0m"
+        sleep 2
+        exit 0
+     fi
+    
+    done
 
 SCRIPT
 
@@ -35,13 +99,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             v.cpus = 1
         end
 
-        # server.trigger.before :up do |trigger|
-        #     trigger.run = {inline: $disable_firewalld}
-        # end
-
+        
         # privileged (boolean) - Specifies whether to execute the shell script as
         #  a privileged user or not (sudo). By default this is "true".
-        server.vm.provision "shell", inline: $server_config  , privileged: false
+        server.vm.provision "shell", inline: $server_config , privileged: false
+
+        # server.trigger.after :up do |trigger|
+        #     trigger.run = {inline: $wait_for_pods_to_run, privileged: false}
+        # end
+
     end
     
 end

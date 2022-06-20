@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: inception-of-things
+  labels:
+    name: inception-of-things
+

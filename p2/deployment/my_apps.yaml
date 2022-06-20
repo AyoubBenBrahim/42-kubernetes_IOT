@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: inception-of-things
   name: app1
   labels:
     app: app1
@@ -28,6 +29,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: inception-of-things
   name: app2
   labels:
     app: app2
@@ -55,6 +57,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: inception-of-things
   name: app3
   labels:
     app: app3

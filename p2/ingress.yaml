@@ -29,7 +29,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hello-kubernetes
-  namespace: default
+  namespace: inception-of-things
 spec:
   rules:
   - http:
