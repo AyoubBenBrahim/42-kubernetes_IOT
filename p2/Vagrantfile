@@ -41,7 +41,7 @@ while (true)
             echo -e "\033[0;32m Pod4 is Running .....\033[0m"
      
         elif [ $output == "5" ]; then
-            echo -e "\033[0;32m All Pods are Ready and  Running .....\033[0m"
+            echo -e "\033[0;32m \nAll Pods are Ready and  Running .....\n \033[0m"
             sleep 2
             # exit 0
             break
