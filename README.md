@@ -20,7 +20,22 @@ Chef
 By default, provisioning is executed only during the first run of $ vagrant up
 
 
+instead of loading the VM every time with vag up, load only the immage of centos and do the configuration inside manually
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip=192.168.42.110 --flannel-iface=eth1 --write-kubeconfig-mode=644" sh -
+
+and retry if smthg failed
+
+/usr/local/bin/k3s-killall.sh
+/usr/local/bin/k3s-uninstall.sh
+
+
+
+
 ====
+
+p2
+
 
 Kubernetes Deployment?
     Kubernetes deployment is an abstraction describing how your application will be deployed.
@@ -41,3 +56,35 @@ while Kubernetes deployment is "in charge" with keeping the pods running in the 
 Deployments working to define the desired state of the application and Services working to make sure communication between almost any kind of resource and the rest of the cluster is stable and adaptable. 
 
 
+Part 3
+
+k3s
+(Rancher Lab’s minimal Kubernetes distribution) 
+
+lightweight tool designed to run production-level Kubernetes on local machines. 
+In order to achieve this, they remove a lot of extra drivers that didn’t need 
+to be part of the core and are easily replace with add-ons.
+k3s clusters provide an environment that simulates the standard k8s
+
+K3d
+
+k3d is an open-source utility designed to easily run highly available lightweight k3s clusters in a docker container.
+
+With k3d you can easily create single and multi-node k3s clusters for seamless local development and testing on Kubernetes.
+By running in Kubernetes, k3d also helps you to scale your workload up and down without more effort.
+
+k3d is a wrapper of k3s but one of the apparent differences is that k3s deploys a virtual machine-based 
+Kubernetes cluster while k3d deploys Docker-based k3s Kubernetes clusters.
+
+
+One of the key differences is that k3d deploys Docker-based k3s Kubernetes clusters while k3s deploys a virtual machine-based Kubernetes cluster.
+K3d offers a more scalable version of k3s which might make it preferable to the standard k3s.
+k3d appears to be a more flexible and improved version of k3s even though their features and usage are similar.
+
+
+k3s-in-docker in Go
+
+
+a Namespace?
+You can think of a Namespace as a virtual cluster inside your Kubernetes cluster.
+ You can have multiple namespaces inside a single Kubernetes cluster, and they are all logically isolated from each other.
