@@ -43,7 +43,6 @@ while (true)
         elif [ $output == "5" ]; then
             echo -e "\033[0;32m \nAll Pods are Ready and  Running .....\n \033[0m"
             sleep 2
-            # exit 0
             break
 
         else 
@@ -53,24 +52,22 @@ while (true)
     
     done
 
-    while (true)
-        do         
-            echo -e "\033[0;31m HTTP server fails to deliver the page .....\033[0m"
-            sleep 3
+while (true)
+    do         
+        echo -e "\033[0;31m HTTP server fails to deliver the page .....\033[0m"
+        sleep 3
 
-            output=$(curl --connect-timeout 3 -s -o /dev/null -w '%{http_code}' 192.168.42.110)
+        output=$(curl --connect-timeout 3 -s -o /dev/null -w '%{http_code}' 192.168.42.110)
+        if [ $output -eq 200 ]; then 
+            echo -e "\033[0;32m HTTP request was successful .....\033[0m"
+            sleep 2
+            exit 0
+        fi
 
-            if [ $output -eq 200 ]; then 
-                echo -e "\033[0;32m HTTP request was successful .....\033[0m"
-                sleep 2
-                exit 0
-            fi
-
-        done
+    done
     
 SCRIPT
 
-# $wait_for_pods_to_run 
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -86,16 +83,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             v.memory = 1024
             v.cpus = 1
         end
-
         
         # privileged (boolean) - Specifies whether to execute the shell script as
         #  a privileged user or not (sudo). By default this is "true".
         server.vm.provision "shell", inline: $server_config , privileged: false
-
-        # server.trigger.after :up do |trigger|
-        #     trigger.run = {inline: $wait_for_pods_to_run, privileged: false}
-        # end
-
     end
     
 end
