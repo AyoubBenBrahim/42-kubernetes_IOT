@@ -1,0 +1,70 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$server_config = <<-SCRIPT
+
+echo "\n\n================================================================"
+echo  "\033[0;32m ********* Docker Installation ********* 033[0m"
+echo "================================================================\n\n"
+
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get update
+
+ sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  sudo apt-get update -y
+
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+
+
+sudo usermod -aG docker ${USER}
+
+echo "\n\n================================================================"
+echo  "\033[0;32m  ********* kubectl configuration  ********* \033[0m"
+echo "================================================================\n\n"
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+echo "\n\n================================================================"
+echo  "\033[0;32m  ********* k3d install ********* \033[0m"
+echo "================================================================\n\n"
+
+ curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
+SCRIPT
+
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    config.vm.box = "generic/ubuntu1804"
+    config.vm.synced_folder ".", "/vagrant"
+
+    config.vm.define "argocd" do |server|
+        server.vm.hostname = "argocd"
+        server.vm.network "private_network", ip: "192.168.42.112"
+        server.vm.provider :virtualbox do |v|
+            v.name = "argocd"
+            v.memory = 2000
+            v.cpus = 2
+        end
+        
+        # privileged (boolean) - Specifies whether to execute the shell script as
+        #  a privileged user or not (sudo). By default this is "true".
+        server.vm.provision "shell", inline: $server_config , privileged: false
+    end
+    
+end

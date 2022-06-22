@@ -30,7 +30,7 @@ and retry if smthg failed
 /usr/local/bin/k3s-uninstall.sh
 
 
-
+https://gist.github.com/pcrete/811be0e1573afd3b3a67db1770c82e92
 
 ====
 
@@ -88,3 +88,14 @@ k3s-in-docker in Go
 a Namespace?
 You can think of a Namespace as a virtual cluster inside your Kubernetes cluster.
  You can have multiple namespaces inside a single Kubernetes cluster, and they are all logically isolated from each other.
+
+
+======
+
+IP addresses for Kubernetes pods are not persistent because the system assigns each new pod a new IP address.
+ Typically, therefore, direct communication between pods is impossible.
+  However, services have their own relatively stable IP addresses which field requests from external resources. 
+  The service then dispatches the request to an available Kubernetes pod.
+
+
+
