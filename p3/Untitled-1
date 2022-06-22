@@ -1,0 +1,17 @@
+
+echo "\n\n================================================================"
+echo -e "\033[0;32m  ********* Create a new k3s cluster (k3s in docker)  ********* \033[0m"
+echo "================================================================\n\n"
+
+# sudo k3d cluster create k3d-cluster --wait
+
+# echo -e "\033[0;32m \n ********* namespaces creation  *********\n \033[0m"
+
+# sudo kubectl create namespace argocd
+# sudo kubectl create namespace dev
+
+# echo -e "\033[0;32m \n ********* kubectl apply -n argocd *********\n \033[0m"
+
+# kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# # kubectl get pod -n argocd -w
