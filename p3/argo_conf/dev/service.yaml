@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapp-service
+  name: playground-service
 spec:
   selector:
-    app: myapp
+    app: playground
   ports:
-  - port: 8080
-    protocol: TCP
-    targetPort: 8080
-  
+    - protocol: TCP
+      port: 1337
+      targetPort: 1337

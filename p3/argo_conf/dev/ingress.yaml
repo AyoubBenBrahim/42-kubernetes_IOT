@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: part-three
-  namespace: inception
+  name: part3
+  # namespace: dev
 spec:
   rules:
   - http:
@@ -11,6 +11,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name:  service name hereeeeeeeeeeeeeeeeeeeeeee=========********
+            name: playground-service
             port:
               number: 1337

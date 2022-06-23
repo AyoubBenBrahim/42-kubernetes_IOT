@@ -4,48 +4,99 @@
 $server_config = <<-SCRIPT
 
 echo "\n\n================================================================"
-echo  "\033[0;32m ********* Docker Installation ********* 033[0m"
+    echo  "\033[0;32m\t ********* Docker Installation ********* 033[0m"
 echo "================================================================\n\n"
 
-sudo apt-get remove docker docker-engine docker.io containerd runc
-sudo apt-get update
+    sudo apt-get remove docker docker-engine docker.io containerd runc
+    sudo apt-get update
 
- sudo apt-get install \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
+    sudo apt-get install ca-certificates curl gnupg lsb-release
 
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-  sudo apt-get update -y
+    sudo apt-get update -y
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+    sudo usermod -aG docker ${USER}
 
-  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+echo "\033[0;32m\n\n================================================================\033[0m"
+    echo  "\033[0;32m\t  ********* Kubectl Configuration  ********* \033[0m"
+echo "\033[0;32m================================================================\n\n"
 
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    chmod +x ./kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
 
-sudo usermod -aG docker ${USER}
+echo "\033[0;32m\n\n================================================================\033[0m"
+    echo  "\033[0;32m\t  ********* k3d install ********* \033[0m"
+echo "================================================================\n\n\033[0m"
 
-echo "\n\n================================================================"
-echo  "\033[0;32m  ********* kubectl configuration  ********* \033[0m"
-echo "================================================================\n\n"
+curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/kubectl
+echo "\033[0;32m\n\n================================================================"
+    echo -e "\033[0;32m\t  ********* Create a new k3s cluster (k3s-in-docker)  ********* \033[0m"
+echo "\033[0;32m================================================================\n\n\033[0m"
 
-echo "\n\n================================================================"
-echo  "\033[0;32m  ********* k3d install ********* \033[0m"
-echo "================================================================\n\n"
+    sudo k3d cluster create aybourasCluster --api-port 192.168.42.112:6443 -p "80:80@loadbalancer"  --k3s-arg "--no-deploy=traefik@server:*" --wait
 
- curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+echo "\033[0;32m\n\n================================================================\033[0m"
+    echo -e "\033[0;32m\t  ********* Installing argocd  ********* \033[0m"
+echo "\033[0;32m================================================================\n\n\033[0m"
+
+sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-darwin-amd64 
+sudo chmod +x /usr/local/bin/argocd
+
+echo "\033[0;32m\n\n================================================================\033[0m"
+    echo -e "\033[0;32m\t  ********* Create namespaces ********* \033[0m"
+echo "\033[0;32m================================================================\n\n\033[0m"
+
+    sudo kubectl create namespace argocd
+    sudo kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml --wait
+
+    sudo kubectl create namespace dev
+
+echo "\033[0;32m\n\n================================================================\033[0m"
+    echo -e "\033[0;32m\t  ********* Loadbalancer patch  ********* \033[0m"
+echo "\033[0;32m================================================================\n\n\033[0m"
+
+    sudo kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}' 
+    #sudo kubectl get svc -A
+    #sudo kubectl get svc -A --wait
+    #sudo kubectl get pod --namespace argocd -w
+
+    # sudo kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo >> /argocd_pwd.txt
+
+    # sudo kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" > pwd_encrypted
+    # sudo cat pwd_encrypted | base64 -d > pwd_decrypted ; echo "" >> pwd_decrypted
+    # # sudo cat pwd_decrypted
+    # sudo rm pwd_encrypted
+
+echo "\033[0;32m\n\n================================================================\033[0m"
+    echo -e "\033[0;32m\t  ********* Deploying the application  ********* \033[0m"
+echo "\033[0;32m================================================================\n\n\033[0m"
+
+    sudo kubectl  apply -f /vagrant/argo_conf/application.yaml
+    sudo kubectl  apply -f /vagrant/argo_conf/dev/deployment.yaml --namespace dev
+    sudo kubectl  apply -f /vagrant/argo_conf/dev/service.yaml --namespace dev
+    sudo kubectl  apply -f /vagrant/argo_conf/dev/ingress.yaml --namespace dev
+
+    echo -e "\033[0;32m\t  ********* agroCD pwd is:  ********* \033[0m"
+
+    sudo kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" > pwd_encrypted
+    sudo cat pwd_encrypted | base64 -d > pwd_decrypted ; echo "" >> pwd_decrypted
+    sudo rm pwd_encrypted
+    echo ""
+    sudo cat pwd_decrypted
+
+    echo "visit the link: \n https://192.168.42.112:80"
+
+    # Error from server (NotFound): secrets "argocd-initial-admin-secret" not found
 
 SCRIPT
-
 
 VAGRANTFILE_API_VERSION = "2"
 
