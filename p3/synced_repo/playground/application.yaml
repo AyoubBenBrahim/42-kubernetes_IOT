@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/ayoubrs/kubernetes/tree/main/p3/cluster_synced_repo
     targetRevision: HEAD
-    path: p3/synced_repo/playground/dev
+    path: p3/synced_repo/nana_janashia/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: dev
