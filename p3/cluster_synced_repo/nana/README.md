@@ -1,3 +1,8 @@
+
+tech with nina's tutoriel on argoCD
+https://youtu.be/MeU5_k9ssrs
+
+
 #### Commands
 
 ```bash
