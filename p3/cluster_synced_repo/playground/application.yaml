@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/ayoubrs/argoCD.git
+     repoURL: https://github.com/ayoubrs/kubernetes/tree/main/p3/cluster_synced_repo
     targetRevision: HEAD
-    path: p3/synced_repo/nana_janashia/dev
+    path: p3/synced_repo/playground/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: dev
