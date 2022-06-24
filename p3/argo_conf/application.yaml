@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/ayoubrs/argoCD.git
     targetRevision: HEAD
-    path: dev
+    path: p3/synced_repo/playground/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: dev
