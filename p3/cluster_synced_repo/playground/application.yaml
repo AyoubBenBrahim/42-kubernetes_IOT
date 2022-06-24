@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-     repoURL: https://github.com/ayoubrs/kubernetes
+    repoURL: https://github.com/ayoubrs/kubernetes
     targetRevision: HEAD
-    path: p3/synced_repo/playground/dev
+    path: p3/cluster_synced_repo/playground/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: dev
@@ -16,3 +16,4 @@ spec:
     automated:
       selfHeal: true
       prune: true
+      /playground/application.yaml
