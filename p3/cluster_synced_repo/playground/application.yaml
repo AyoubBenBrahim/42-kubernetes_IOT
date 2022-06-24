@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-     repoURL: https://github.com/ayoubrs/kubernetes/tree/main/p3/cluster_synced_repo
+     repoURL: https://github.com/ayoubrs/kubernetes
     targetRevision: HEAD
     path: p3/synced_repo/playground/dev
   destination:
