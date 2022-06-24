@@ -72,10 +72,10 @@ echo "\033[0;32m\n\n============================================================
     echo -e "\033[0;32m\t  ********* Deploying the application  ********* \033[0m"
 echo "\033[0;32m================================================================\n\n\033[0m"
 
-    sudo kubectl  apply -f /vagrant/argo_conf/application.yaml
-    sudo kubectl  apply -f /vagrant/argo_conf/dev/deployment.yaml --namespace dev
-    sudo kubectl  apply -f /vagrant/argo_conf/dev/service.yaml --namespace dev
-# sudo kubectl  apply -f /vagrant/argo_conf/dev/ingress.yaml --namespace dev
+    sudo kubectl  apply -f /vagrant/cluster_synced_repo/playground/application.yaml
+    sudo kubectl  apply -f /vagrant/cluster_synced_repo/playground/dev/deployment.yaml --namespace dev
+    sudo kubectl  apply -f /vagrant/cluster_synced_repo/playground/dev/service.yaml --namespace dev
+# sudo kubectl  apply -f /vagrant/cluster_synced_repo/playground/dev/ingress.yaml --namespace dev
 
     echo -e "\033[0;32m\t  ********* agroCD pwd is:  ********* \033[0m"
 
