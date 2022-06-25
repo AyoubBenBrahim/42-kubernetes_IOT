@@ -5,7 +5,8 @@ echo "\n\n================================================================"
     echo  "\033[0;32m\t ********* Docker Installation ********* 033[0m"
 echo "================================================================\n\n"
 
-    sudo apt-get remove docker docker-engine docker.io containerd runc
+    # sudo apt-get remove docker docker-engine docker.io containerd runc
+    sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-compose-plugin
     sudo apt-get update
 
     sudo apt-get install ca-certificates curl gnupg lsb-release
