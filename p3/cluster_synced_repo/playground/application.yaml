@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
 spec:
   project: default
+
   source:
     repoURL: https://github.com/ayoubrs/kubernetes
     targetRevision: HEAD
@@ -12,6 +13,7 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: dev
+
   syncPolicy:
     automated:
       selfHeal: true
