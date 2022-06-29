@@ -1,0 +1,24 @@
+
+echo "\n\n================================================================"
+echo -e "\033[0;32m  ********* Create a new k3s cluster (k3s in docker)  ********* \033[0m"
+echo "================================================================\n\n"
+
+k3d cluster create cluster1 --api-port ip_addres:6443 -p "80:80@loadbalancer"  --wait
+k3d cluster create cluster2  -p 8080:80@server:0 -p 8888:8888@server:0 -p 8181:8181@server:0 --wait
+k3d cluster create cluster3 --api-port 6550 -p "8081:80@loadbalancer" --agents 2 --wait
+k3d cluster create cluster4 -p 80:80@loadbalancer --wait
+k3d cluster create cluster5 --api-port 6443 --servers 1 --agents -p "30500-31000:30500-31000@server:0" --wait
+
+fifth way using a yaml file:
+https://tealfeed.com/kubernetes-development-clusters-k3d-ctn9y
+
+# echo -e "\033[0;32m \n ********* namespaces creation  *********\n \033[0m"
+
+# sudo kubectl create namespace argocd
+# sudo kubectl create namespace dev
+
+# echo -e "\033[0;32m \n ********* kubectl apply -n argocd *********\n \033[0m"
+
+# kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# # kubectl get pod -n argocd -w
