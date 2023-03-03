@@ -13,10 +13,15 @@ Provisioning
 In Vagrant’s terminology, the process of automatic installation and configuration of software within the guest OS during $ vagrant up is called provisioning and the tools to perform this operation are called provisioners.
 
 Vagrant has built-in support for many popular configuration management tools:
+
 Shell scripts
+
 Puppet
+
 Ansible
+
 Chef
+
 By default, provisioning is executed only during the first run of $ vagrant up
 
 
@@ -27,6 +32,7 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip=192.168.42.110 --flan
 and retry if smthg failed
 
 /usr/local/bin/k3s-killall.sh
+
 /usr/local/bin/k3s-uninstall.sh
 
 
@@ -38,17 +44,20 @@ p2
 
 
 Kubernetes Deployment?
-    Kubernetes deployment is an abstraction describing how your application will be deployed.
+
+   Kubernetes deployment is an abstraction describing how your application will be deployed.
     It describes your Kubernetes cluster
     Once you set up a deployment, it will automatically create pods, incorporating multiple containers. Each pod is connected to the Node. Once that Node fails, your identical PODs will get scheduled on other variable Nodes included in your Kubernetes cluster.
     Using a deployment allows you to easily keep a group of identical pods running with a common configuration.
 
 Kubernetes Services? 
-    It's an abstraction that describes your Kubernetes cluster. 
+
+   It's an abstraction that describes your Kubernetes cluster. 
     Its role is to make your application available to the networks that your cluster's connected to. In short, it exposes it to the outside world...
     In a nutshell, a service in Kubernetes is no more than a load balancer in Kubernetes. It will just send traffic to your app in a round-robin way: network requests get spread across the ecosystem of the running pods.
 
 A deployment is responsible for keeping a set of pods running.
+
 A service is responsible for enabling network access to a set of pods. 
 
 while Kubernetes deployment is "in charge" with keeping the pods running in the cluster, a service is in charge of granting network access to those pods.
@@ -59,11 +68,15 @@ Deployments working to define the desired state of the application and Services 
 Part 3
 
 k3s
+
 (Rancher Lab’s minimal Kubernetes distribution) 
 
 lightweight tool designed to run production-level Kubernetes on local machines. 
+
 In order to achieve this, they remove a lot of extra drivers that didn’t need 
+
 to be part of the core and are easily replace with add-ons.
+
 k3s clusters provide an environment that simulates the standard k8s
 
 K3d
@@ -86,11 +99,11 @@ k3s-in-docker in Go
 
 
 a Namespace?
+
 You can think of a Namespace as a virtual cluster inside your Kubernetes cluster.
  You can have multiple namespaces inside a single Kubernetes cluster, and they are all logically isolated from each other.
 
 
-======
 
 IP addresses for Kubernetes pods are not persistent because the system assigns each new pod a new IP address.
  Typically, therefore, direct communication between pods is impossible.
